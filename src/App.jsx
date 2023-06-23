@@ -1,11 +1,16 @@
 import React from "react";
+import { useState } from "react";
 
-const Search = () => {
+const Search = (props) => {
+  const [searchTerm, setSearchTerm] = useState("");
+
   const handleChange = (event) => {
     console.log(event);
     // value of the target
     console.log(event.target.value);
   };
+
+  props.onSearch(event);
   return (
     <div>
       <label htmlFor="search">Search:</label>
@@ -37,6 +42,10 @@ const List = (props) => (
 
 const App = () => {
   // test
+
+  const handleSearch = (event) => {
+    console.log(event.target.value);
+  };
   const stories = [
     {
       title: "React",
@@ -59,7 +68,7 @@ const App = () => {
     <div>
       <h1>My Hacker Stories</h1>
       <hr />
-      <Search />
+      <Search onSearch={handleSearch} />
       <List list={stories} />
     </div>
   );

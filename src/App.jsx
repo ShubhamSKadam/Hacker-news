@@ -14,19 +14,23 @@ const Search = () => {
   );
 };
 
-const List = () => (
+const Item = (props) => {
+  return (
+    <li key={props.listItem.objectID}>
+      <span>
+        <a href={props.listItem.url}>{props.listItem.title} </a>
+      </span>
+      <span>Author : {props.listItem.author}, </span>
+      <span>Comments : {props.listItem.num_comments}, </span>
+      <span>Points : {props.listItem.points}</span>
+    </li>
+  );
+};
+
+const List = (props) => (
   <div>
-    {list.map((Element) => {
-      return (
-        <li key={Element.objectID}>
-          <span>
-            <a href={Element.url}>{Element.title} </a>
-          </span>
-          <span>Author : {Element.author}, </span>
-          <span>Comments : {Element.num_comments}, </span>
-          <span>Points : {Element.points}</span>
-        </li>
-      );
+    {props.list.map((item) => {
+      return <Item listItem={item} />;
     })}
   </div>
 );
@@ -56,7 +60,7 @@ const App = () => {
       <h1>My Hacker Stories</h1>
       <hr />
       <Search />
-      <List />
+      <List list={stories} />
     </div>
   );
 };

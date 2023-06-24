@@ -1,24 +1,22 @@
 import React from "react";
 import { useState } from "react";
 
+// Search Component
 const Search = (props) => {
-  const [searchTerm, setSearchTerm] = useState("");
-
-  const handleChange = (event) => {
-    console.log(event);
-    // value of the target
-    console.log(event.target.value);
-  };
-
-  props.onSearch(event);
   return (
     <div>
       <label htmlFor="search">Search:</label>
-      <input type="text" id="search" onChange={handleChange} />
+      <input
+        type="text"
+        id="search"
+        onChange={props.onSearch}
+        value={props.search}
+      />
     </div>
   );
 };
 
+// Item component
 const Item = (props) => {
   return (
     <li key={props.listItem.objectID}>
@@ -32,20 +30,25 @@ const Item = (props) => {
   );
 };
 
+// List component
 const List = (props) => (
   <div>
-    {props.list.map((item) => {
-      return <Item listItem={item} />;
+    {props.list.map((item, index) => {
+      return <Item key={index} listItem={item} />;
     })}
   </div>
 );
 
+// App component
+
 const App = () => {
-  // test
+  const [searchTerm, setSearchTerm] = useState("redux");
 
   const handleSearch = (event) => {
-    console.log(event.target.value);
+    setSearchTerm(event.target.value);
   };
+
+  // stories object data
   const stories = [
     {
       title: "React",
@@ -64,12 +67,17 @@ const App = () => {
       objectID: 1,
     },
   ];
+
+  const searchedStories = stories.filter((story) => {
+    return story.title.toLowerCase().includes(searchTerm.toLowerCase());
+  });
+
   return (
     <div>
       <h1>My Hacker Stories</h1>
       <hr />
-      <Search onSearch={handleSearch} />
-      <List list={stories} />
+      <Search search={searchTerm} onSearch={handleSearch} />
+      <List list={searchedStories} />
     </div>
   );
 };

@@ -1,40 +1,35 @@
 import React from "react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 // Search Component
-const Search = (props) => {
+const Search = ({ onSearch, search }) => {
   return (
     <div>
       <label htmlFor="search">Search:</label>
-      <input
-        type="text"
-        id="search"
-        onChange={props.onSearch}
-        value={props.search}
-      />
+      <input type="text" id="search" onChange={onSearch} value={search} />
     </div>
   );
 };
 
 // Item component
-const Item = (props) => {
+const Item = ({ title, url, author, num_comments, points }) => {
   return (
-    <li key={props.listItem.objectID}>
+    <li>
       <span>
-        <a href={props.listItem.url}>{props.listItem.title} </a>
+        <a href={url}>{title} </a>
       </span>
-      <span>Author : {props.listItem.author}, </span>
-      <span>Comments : {props.listItem.num_comments}, </span>
-      <span>Points : {props.listItem.points}</span>
+      <span>Author : {author}, </span>
+      <span>Comments : {num_comments}, </span>
+      <span>Points : {points}</span>
     </li>
   );
 };
 
 // List component
-const List = (props) => (
+const List = ({ list }) => (
   <div>
-    {props.list.map((item, index) => {
-      return <Item key={index} listItem={item} />;
+    {list.map(({ objectID, ...item }) => {
+      return <Item key={objectID} {...item} />;
     })}
   </div>
 );
@@ -42,7 +37,18 @@ const List = (props) => (
 // App component
 
 const App = () => {
-  const [searchTerm, setSearchTerm] = useState("redux");
+  const [searchTerm, setSearchTerm] = useStorageState("React");
+
+  const useStorageState = (key,initialState) => {
+    const [value, setValue] = useState(
+      localStorage.getItem(key) || initialState
+    );
+    useEffect(() => {
+      localStorage.setItem(key, value);
+    }, [value,key]);
+
+    return [value, setValue];
+  };
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
